@@ -23,3 +23,5 @@ def receive_cam_udp():
         print("")
 
     sock.close()
+
+receive_cam_udp()
