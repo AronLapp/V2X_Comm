@@ -1,3 +1,3 @@
 # Module V2X Communication HTWG Konstanz SS23
 ## CAM Communication
-Implementation of a simple CAM message that holds the vehicle's position, velocity and direction. The message should be sent via network and received by either a UDP channel or a broadcas message (everyone on the network can read it).
+Implementation of a simple CAM (Cooperative Awareness Message) that holds the vehicle's position, velocity and direction. The message should be sent via network and received by either a UDP channel or a broadcas message (everyone on the network can read it).<br/>cam_analyzer.py is meant to be ran on a seperate computer that is in the same network as the model car. It listens to broadcasted CAMs and creates a plot of the car's coordinates over time.
