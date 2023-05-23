@@ -26,10 +26,15 @@ class UDPPositionPlotter:
             ready, _, _ = select.select([self.sock], [], [], 0.2)
 
             if ready:
+
                 data, addr = self.sock.recvfrom(1024)
                 t_elapsed = time.time() - self.tstart
                 json_data = data.decode('utf-8')
                 payload = json.loads(json_data)
+
+                print("received payload:")
+                print(payload)
+                print("")
 
                 #Extract JSON
                 position_x = payload['position']['position_x']
@@ -51,12 +56,14 @@ class UDPPositionPlotter:
                 ax.set_ylabel('Position')
                 ax.legend()
                 plt.draw()
+                # required for updating plot
                 plt.pause(0.001)
 
     def close(self):
         self.sock.close()
-    
-position_plotter = UDPPositionPlotter('127.0.0.1', 5000)
+
+# RNPI2 broadcast Address is 10.255.255.255
+position_plotter = UDPPositionPlotter('0.0.0.0', 5000)
 
 try:
     position_plotter.receive_data()
