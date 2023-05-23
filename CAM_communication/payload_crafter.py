@@ -68,7 +68,7 @@ def send_cam_broadcast(posx, posy, posz, vel, direct):
     sock.close()
 
 while True:
-    HALL = _HALL()
+    HALL = read_HALL()
     Pos = update_Pos_List(old_HALL, HALL, Pos)
     old_HALL = HALL
     current_time = time()
