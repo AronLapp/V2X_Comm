@@ -24,4 +24,4 @@ def receive_cam_udp(host, port):
 
 
 # needs other IP if listening to broadcast
-receive_cam_udp('127.0.0.1', 5000)
+receive_cam_udp('0.0.0.0', 5000)
