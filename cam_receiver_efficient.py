@@ -17,7 +17,6 @@ def receive_cam_udp(sock):
             print("Received payload:")
             print(payload)
             print("")
-    sock.close()
 
 # needs other IP if listening to broadcast
 # Broadcast addr = 10.255.255.255 on Pi2

@@ -26,7 +26,6 @@ class UDPPositionPlotter:
             ready, _, _ = select.select([self.sock], [], [], 0.2)
 
             if ready:
-
                 data, addr = self.sock.recvfrom(1024)
                 t_elapsed = time.time() - self.tstart
                 json_data = data.decode('utf-8')
