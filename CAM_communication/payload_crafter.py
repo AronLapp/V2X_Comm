@@ -17,8 +17,8 @@ def listen():
     else:
         return 0.0
 
-def update_Pos_List(old_HOL, HOL, Pos):
-    if old_HOL == HOL:
+def update_Pos_List(old_HALL, HALL, Pos):
+    if old_HALL == HALL:
         Pos.append(Pos[-1])
         Pos = trunc(Pos)
         return Pos
@@ -42,7 +42,7 @@ def update_Velocity(Pos_arr):
         return 0.0
     
 Pos = deque([0])
-old_HOL = -1
+old_HALL = -1
 start_time = time()
 
 def generate_payload(posx, posy, posz, vel, direct):
@@ -68,9 +68,9 @@ def send_cam_broadcast(posx, posy, posz, vel, direct):
     sock.close()
 
 while True:
-    HOL = listen()
-    Pos = update_Pos_List(old_HOL, HOL, Pos)
-    old_HOL = HOL
+    HALL = listen()
+    Pos = update_Pos_List(old_HALL, HALL, Pos)
+    old_HALL = HALL
     current_time = time()
     elapsed_time = current_time - start_time
 
