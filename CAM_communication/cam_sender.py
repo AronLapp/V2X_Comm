@@ -36,7 +36,7 @@ def send_cam_udp(posx, posy, posz, vel, direct):
 
 def send_cam_broadcast(posx, posy, posz, vel, direct):
     # requires actual values
-    broadcast_address = '255.255.255.255'
+    broadcast_address = '10.255.255.255'
     port = 5000
 
     payload = generate_payload(posx, posy, posz, vel, direct)
@@ -53,4 +53,4 @@ def send_cam_broadcast(posx, posy, posz, vel, direct):
 
 # this is an example. In the final version, the send_cam should be called by
 # a function that has access to the actual values
-send_cam_udp(0, 0, 0 ,50 ,"north")
+send_cam_broadcast(0, 0, 0 ,0 ,"north")
