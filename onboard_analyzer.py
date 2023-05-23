@@ -2,6 +2,7 @@ from time import sleep
 import RPi.GPIO as GPIO
 import json
 import socket
+from array import deque # FIFO array
 
 GPIO.setmode(GPIO.BCM)
 
