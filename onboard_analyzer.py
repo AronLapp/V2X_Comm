@@ -1,6 +1,33 @@
+from time import sleep
+import RPi.GPIO as GPIO
 import json
 import socket
 
+GPIO.setmode(GPIO.BCM)
+
+INPUT_PIN = 4
+GPIO.setup(INPUT_PIN, GPIO.IN)
+
+def listen():
+    if(GPIO.input(INPUT_PIN) == True):
+        return 3.3
+    else:
+        return 0.0
+
+# Note: Can not track direction at this point
+def position_tracker(posold, listenold, listenval):
+    if len(posold) >= 1:
+        if listenval == listenold:
+            return posold
+        else:
+            return posold + 0.5
+
+def calculate_velocity(velarr):
+    if(len(velarr)) > 1:
+        currvel = velarr[len(velarr - 1)] - velarr[0]
+        return currvel
+    else:
+        return 0
 
 def generate_payload(posx, posy, posz, vel, direct):
     with open('cam_msg.json') as file:
@@ -13,26 +40,6 @@ def generate_payload(posx, posy, posz, vel, direct):
         template_payload['direction'] = direct
     payload = template_payload
     return payload
-
-
-def send_cam_udp(posx, posy, posz, vel, direct):
-    # requires actual values
-    host = "127.0.0.1"
-    port = 5000
-
-    payload = generate_payload(posx, posy, posz, vel, direct)
-    # convert payload into json, json into bytes
-    json_payload = json.dumps(payload).encode('utf-8')
-
-    # create UDP socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    # send UDP packet
-    sock.sendto(json_payload, (host, port))
-    print("Sent payload " + str(payload))
-
-    sock.close()
-
 
 def send_cam_broadcast(posx, posy, posz, vel, direct):
     # requires actual values
@@ -50,7 +57,9 @@ def send_cam_broadcast(posx, posy, posz, vel, direct):
 
     sock.close()
 
-
-# this is an example. In the final version, the send_cam should be called by
-# a function that has access to the actual values
-send_cam_broadcast(0, 0, 0 ,0 ,"north")
+listenold = -1
+posarr = []
+for i in range(0, 5):
+    listenval = listen()
+    position_tracker(posarr, listenval, listenold)
+    listenold = listenval
