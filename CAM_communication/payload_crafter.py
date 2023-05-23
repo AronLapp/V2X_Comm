@@ -11,7 +11,7 @@ ELAPSED_TIME_THRESHOLD = 1.0
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(INPUT_PIN, GPIO.IN)
 
-def listen():
+def read_HALL():
     if(GPIO.input(INPUT_PIN) == True):
         return 3.3
     else:
@@ -20,14 +20,14 @@ def listen():
 def update_Pos_List(old_HALL, HALL, Pos):
     if old_HALL == HALL:
         Pos.append(Pos[-1])
-        Pos = trunc(Pos)
+        Pos = truncate_list(Pos)
         return Pos
     else:
         Pos.append(Pos[-1] + 0.5)
-        Pos = trunc(Pos)
+        Pos = truncate_list(Pos)
         return Pos
 
-def trunc(lst):
+def truncate_list(lst):
     while len(lst) > MAX_POSITIONS:
         lst.popleft()
     return lst
@@ -68,7 +68,7 @@ def send_cam_broadcast(posx, posy, posz, vel, direct):
     sock.close()
 
 while True:
-    HALL = listen()
+    HALL = _HALL()
     Pos = update_Pos_List(old_HALL, HALL, Pos)
     old_HALL = HALL
     current_time = time()
