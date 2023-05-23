@@ -2,9 +2,7 @@ import json
 import select
 import socket
 
-def receive_cam_udp(host, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((host, port))
+def receive_cam_udp(sock):
 
     print("UDP server listening on {}:{}".format(host, port))
 
@@ -22,4 +20,15 @@ def receive_cam_udp(host, port):
     sock.close()
 
 # needs other IP if listening to broadcast
-receive_cam_udp('127.0.0.1', 5000)
+# Broadcast addr = 10.255.255.255 on Pi2
+try:
+    host = '10.255.255.255'
+    port = 5000
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind((host, port))
+    while True:
+        receive_cam_udp(sock)
+except KeyboardInterrupt:
+    pass
+finally:
+    sock.close()
