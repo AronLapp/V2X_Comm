@@ -3,7 +3,7 @@ import socket
 
 
 def generate_payload(posx, posy, posz, vel, direct):
-    with open('cam_msg.json') as file:
+    with open('../cam_msg.json') as file:
         template_payload = json.load(file)
 
         template_payload['position']['position_x'] = posx
@@ -47,6 +47,7 @@ def send_cam_broadcast(posx, posy, posz, vel, direct):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     sock.sendto(json_payload, (broadcast_address, port))
+    print("Sent payload " + str(payload))
 
     sock.close()
 
