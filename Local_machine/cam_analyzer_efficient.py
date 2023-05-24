@@ -36,14 +36,20 @@ class UDPPositionPlotter:
                 print("")
 
                 #Extract JSON
-                position_x = payload['position']['position_x']
-                position_y = payload['position']['position_y']
-                position_z = payload['position']['position_z']
+                with open('../cam_msg.json') as file:
+                    template_payload = json.load(file)
+
+                # Populate values from received payload
+                template_payload['position']['position_x'] = payload['position']['position_x']
+                template_payload['position']['position_y'] = payload['position']['position_y']
+                template_payload['position']['position_z'] = payload['position']['position_z']
+                template_payload['velocity'] = payload['velocity']
+                template_payload['direction'] = payload['direction']
 
                 #append to position lists
-                self.positions_x.append(position_x)
-                self.positions_y.append(position_y)
-                self.positions_z.append(position_z)
+                self.positions_x.append(template_payload['position']['position_x'])
+                self.positions_y.append(template_payload['position']['position_y'])
+                self.positions_z.append(template_payload['position']['position_z'])
                 self.timestamps.append(t_elapsed)
 
                 #Clear previous plot and redraw

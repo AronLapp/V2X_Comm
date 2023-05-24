@@ -46,7 +46,7 @@ old_HALL = -1
 start_time = time()
 
 def generate_payload(posx, posy, posz, vel, direct):
-    with open('cam_msg.json') as file:
+    with open('../cam_msg.json') as file:
         template_payload = json.load(file)
         template_payload['position']['position_x'] = posx
         template_payload['position']['position_y'] = posy
