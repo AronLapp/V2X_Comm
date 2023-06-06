@@ -26,10 +26,8 @@ def listen_callback():
     GPIO.add_event_detect(INPUT_PIN, edge = GPIO.FALLING, callback= falling_edge_callback, bouncetime = 1)
 
 def falling_edge_callback(channel):
-    if not GPIO.input(4):
-        Pos.append(Pos[-1] + .5)
-    else:
-        Pos.append(Pos[-1])
+    Pos.append(Pos[-1] + .5)
+ 
 
 Pos = [0]
 start_time = time()
