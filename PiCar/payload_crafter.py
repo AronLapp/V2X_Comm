@@ -1,10 +1,11 @@
 import RPi.GPIO as GPIO
 import json
 import socket
-from array import deque # FIFO array
+from array import * # FIFO array
 from time import sleep, time
 
-MAX_POSITIONS = 5
+# MAX_POSITIONS = 1/interval
+MAX_POSITIONS = 50
 INPUT_PIN = 4
 ELAPSED_TIME_THRESHOLD = 1.0
 
@@ -29,7 +30,7 @@ def update_Pos_List(old_HALL, HALL, Pos):
 
 def truncate_list(lst):
     while len(lst) > MAX_POSITIONS:
-        lst.popleft()
+        lst.pop(0)
     return lst
 
 def update_Velocity(Pos_arr):
@@ -41,7 +42,7 @@ def update_Velocity(Pos_arr):
     else:
         return 0.0
     
-Pos = deque([0])
+Pos = [0]
 old_HALL = -1
 start_time = time()
 
@@ -58,7 +59,7 @@ def generate_payload(posx, posy, posz, vel, direct):
 
 def send_cam_broadcast(posx, posy, posz, vel, direct):
     # requires actual values
-    broadcast_address = '10.255.255.255'
+    broadcast_address = '10.42.0.255'
     port = 5000
     payload = generate_payload(posx, posy, posz, vel, direct)
     json_payload = json.dumps(payload).encode('utf-8')
@@ -80,4 +81,4 @@ while True:
         send_cam_broadcast(posx = Pos[-1], posy = 0, posz = 0 , vel = velocity, direct = 'forward')
         start_time = time()
     
-    sleep(0.2)
+    sleep(0.02)
