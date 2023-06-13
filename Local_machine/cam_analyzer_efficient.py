@@ -40,23 +40,23 @@ class UDPPositionPlotter:
                     template_payload = json.load(file)
 
                 # Populate values from received payload
-                template_payload['position']['position_x'] = payload['position']['position_x']
-                template_payload['position']['position_y'] = payload['position']['position_y']
-                template_payload['position']['position_z'] = payload['position']['position_z']
+                template_payload['position']['ticks'] = payload['position']['ticks']
+                template_payload['position']['latitude'] = payload['position']['latitude']
+                template_payload['position']['longitude'] = payload['position']['longitude']
                 template_payload['velocity'] = payload['velocity']
                 template_payload['direction'] = payload['direction']
 
                 #append to position lists
-                self.positions_x.append(template_payload['position']['position_x'])
-                self.positions_y.append(template_payload['position']['position_y'])
-                self.positions_z.append(template_payload['position']['position_z'])
+                self.positions_x.append(template_payload['position']['ticks'])
+                self.positions_y.append(template_payload['position']['latitude'])
+                self.positions_z.append(template_payload['position']['longitude'])
                 self.timestamps.append(t_elapsed)
 
                 #Clear previous plot and redraw
                 ax.clear()
-                ax.plot(self.timestamps, self.positions_x, label='PosX')
-                ax.plot(self.timestamps, self.positions_y, label='PosY')
-                ax.plot(self.timestamps, self.positions_z, label='PosZ')
+                ax.plot(self.timestamps, self.positions_x, label='ticks')
+                ax.plot(self.timestamps, self.positions_y, label='latitude')
+                ax.plot(self.timestamps, self.positions_z, label='longitude')
                 ax.set_xlabel('Time')
                 ax.set_ylabel('Position')
                 ax.legend()

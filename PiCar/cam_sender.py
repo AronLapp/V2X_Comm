@@ -6,9 +6,9 @@ def generate_payload(posx, posy, posz, vel, direct):
     with open('../cam_msg.json') as file:
         template_payload = json.load(file)
 
-        template_payload['position']['position_x'] = posx
-        template_payload['position']['position_y'] = posy
-        template_payload['position']['position_z'] = posz
+        template_payload['position']['ticks'] = posx
+        template_payload['position']['latitude'] = posy
+        template_payload['position']['longitude'] = posz
         template_payload['velocity'] = vel
         template_payload['direction'] = direct
     payload = template_payload
