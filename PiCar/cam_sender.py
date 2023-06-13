@@ -2,25 +2,25 @@ import json
 import socket
 
 
-def generate_payload(posx, posy, posz, vel, direct):
+def generate_payload(ticks, latitude, longitude, vel, direct):
     with open('../cam_msg.json') as file:
         template_payload = json.load(file)
 
-        template_payload['position']['ticks'] = posx
-        template_payload['position']['latitude'] = posy
-        template_payload['position']['longitude'] = posz
+        template_payload['position']['ticks'] = ticks
+        template_payload['position']['latitude'] = latitude
+        template_payload['position']['longitude'] = longitude
         template_payload['velocity'] = vel
         template_payload['direction'] = direct
     payload = template_payload
     return payload
 
 
-def send_cam_udp(posx, posy, posz, vel, direct):
+def send_cam_udp(ticks, latitude, longitude, vel, direct):
     # requires actual values
     host = "127.0.0.1"
     port = 5000
 
-    payload = generate_payload(posx, posy, posz, vel, direct)
+    payload = generate_payload(ticks, latitude, longitude, vel, direct)
     # convert payload into json, json into bytes
     json_payload = json.dumps(payload).encode('utf-8')
 
@@ -34,12 +34,12 @@ def send_cam_udp(posx, posy, posz, vel, direct):
     sock.close()
 
 
-def send_cam_broadcast(posx, posy, posz, vel, direct):
+def send_cam_broadcast(ticks, latitude, longitude, vel, direct):
     # requires actual values
     broadcast_address = '10.255.255.255'
     port = 5000
 
-    payload = generate_payload(posx, posy, posz, vel, direct)
+    payload = generate_payload(ticks, latitude, longitude, vel, direct)
     json_payload = json.dumps(payload).encode('utf-8')
     
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
