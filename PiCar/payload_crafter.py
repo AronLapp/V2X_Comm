@@ -46,22 +46,22 @@ Pos = [0]
 old_HALL = -1
 start_time = time()
 
-def generate_payload(posx, posy, posz, vel, direct):
+def generate_payload(ticks, latitude, longitude, vel, direct):
     with open('../cam_msg.json') as file:
         template_payload = json.load(file)
-        template_payload['position']['ticks'] = posx
-        template_payload['position']['latitude'] = posy
-        template_payload['position']['longitude'] = posz
+        template_payload['position']['ticks'] = ticks
+        template_payload['position']['latitude'] = latitude
+        template_payload['position']['longitude'] = longitude
         template_payload['velocity'] = vel
         template_payload['direction'] = direct
     payload = template_payload
     return payload
 
-def send_cam_broadcast(posx, posy, posz, vel, direct):
+def send_cam_broadcast(ticks, latitude, longitude, vel, direct):
     # requires actual values
     broadcast_address = '10.42.0.255'
     port = 5000
-    payload = generate_payload(posx, posy, posz, vel, direct)
+    payload = generate_payload(ticks, latitude, longitude, vel, direct)
     json_payload = json.dumps(payload).encode('utf-8')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -78,7 +78,7 @@ while True:
     if elapsed_time >= ELAPSED_TIME_THRESHOLD:
         velocity = update_Velocity(Pos)
         # Coordinate system and Direction not implemented yet
-        send_cam_broadcast(posx = Pos[-1], posy = 0, posz = 0 , vel = velocity, direct = 'forward')
+        send_cam_broadcast(ticks = Pos[-1], latitude = 0, longitude = 0 , vel = velocity, direct = 'forward')
         start_time = time()
     
     sleep(0.02)
