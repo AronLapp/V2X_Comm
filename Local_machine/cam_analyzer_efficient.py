@@ -11,9 +11,9 @@ class UDPPositionPlotter:
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.host, self.port))
-        self.positions_x = []
-        self.positions_y = []
-        self.positions_z = []
+        self.ticks = []
+        self.latitude = []
+        self.longitude = []
         self.timestamps = []
         self.tstart = time.time()
 
@@ -54,9 +54,9 @@ class UDPPositionPlotter:
 
                 #Clear previous plot and redraw
                 ax.clear()
-                ax.plot(self.timestamps, self.positions_x, label='ticks')
-                ax.plot(self.timestamps, self.positions_y, label='latitude')
-                ax.plot(self.timestamps, self.positions_z, label='longitude')
+                ax.plot(self.timestamps, self.ticks, label='ticks')
+                ax.plot(self.timestamps, self.latitude, label='latitude')
+                ax.plot(self.timestamps, self.longitude, label='longitude')
                 ax.set_xlabel('Time')
                 ax.set_ylabel('Position')
                 ax.legend()
