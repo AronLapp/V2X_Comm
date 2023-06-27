@@ -2,13 +2,14 @@ import RPi.GPIO as GPIO
 import json
 import socket
 import serial
-from array import * # FIFO array
+from array import *
 from time import sleep, time
 
 import pynmea2
 import math
 import re
 
+# GPS code is largely extracted from https://www.waveshare.com/wiki/EM060K-GL_LTE_Cat-6_HAT examples EM06E_GNSS_GAODE.py
 x_pi = 3.14159265358979324 * 3000.0 / 180.0
 pi = 3.1415926535897932384626  # π
 a = 6378245.0  # Semi-major axis
@@ -92,10 +93,11 @@ def serial_data_reader():
  
                 print ("longitude,latitude")#longitude,latitude
                 print (""+str(mglng)+","+str(mglat)+"")#经度,纬度
-    else:
-        mglng = -1
-        mglat = -1
-    return (mglng, mglat)
+            else:
+                mglng = -1
+                mglat = -1
+            return (mglng, mglat)
+    return None
 
 def setup():
     # global response
@@ -136,9 +138,8 @@ while True:
     current_time = time()
     elapsed_time = current_time - start_time
     new_latitude, new_longitude = serial_data_reader()
-    if new_latitude != -1 and new_longitude != -1:
-        latitude = new_latitude
-        longitude = new_longitude
+    if new_latitude == -1 and new_longitude == -1 or new_latitude == None and new_longitude == None:
+        pass
     if elapsed_time >= ELAPSED_TIME_THRESHOLD:
         velocity = update_Velocity(Pos)
         # Coordinate system and Direction not implemented yet
