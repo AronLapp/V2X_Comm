@@ -78,7 +78,7 @@ def serial_data_reader():
                 print(rmc)
                 latitude = rmc.latitude
                 longitude= rmc.longitude
-                return [latitude, longitude]
+                return [longitude, latitude]
         #time.sleep(2)
     return [-1, -1]
 
