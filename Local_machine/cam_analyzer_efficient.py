@@ -47,9 +47,9 @@ class UDPPositionPlotter:
                 template_payload['direction'] = payload['direction']
 
                 #append to position lists
-                self.positions_x.append(template_payload['position']['ticks'])
-                self.positions_y.append(template_payload['position']['latitude'])
-                self.positions_z.append(template_payload['position']['longitude'])
+                self.ticks.append(template_payload['position']['ticks'])
+                self.latitude.append(template_payload['position']['latitude'])
+                self.longitude.append(template_payload['position']['longitude'])
                 self.timestamps.append(t_elapsed)
 
                 #Clear previous plot and redraw
