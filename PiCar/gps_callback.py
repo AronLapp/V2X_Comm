@@ -43,7 +43,7 @@ Pos = [0]
 start_time = time()
 
 def generate_payload(ticks, latitude, longitude, vel, direct):
-    with open('../cam_msg.json') as file:
+    with open('cam_msg.json') as file:
         template_payload = json.load(file)
         template_payload['position']['ticks'] = ticks
         template_payload['position']['latitude'] = latitude
@@ -66,38 +66,21 @@ def send_cam_broadcast(ticks, latitude, longitude, vel, direct):
 
 def serial_data_reader():
     ser = serial.Serial("/dev/ttyUSB1", 115200)
-    print("Serial port opened")
-
-    if (ser.in_waiting() > 0):
-        line = str(ser.readline(), encoding = "utf-8")
+    #print("Serial port opened")
+    while True:
+        line = str(ser.readline(),encoding = "utf-8")
+        print("starts with $GPRMC")
         if line.startswith("$GPRMC"):
             global Longitude
             global Latitude
             rmc = pynmea2.parse(line)
-            if re.match("^\d+?\.\d+?$", rmc.lat) is not None:
+            if re.match("^\d+?\.\d+?$", rmc.lat)is not None:
                 print(rmc)
                 latitude = rmc.latitude
-                longitude = rmc.longitude
-                # ''' SIM820X uses the gcj_02 coordinate system, no coordinate conversion is required
-                dlat = _transformlat(longitude - 105.0, latitude - 35.0)
-                dlng = _transformlng(longitude - 105.0, latitude - 35.0)
-                radlat = latitude / 180.0 * pi
-                magic = math.sin(radlat)
-                magic = 1 - ee * magic * magic
-                sqrtmagic = math.sqrt(magic)
-                dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * pi)
-                dlng = (dlng * 180.0) / (a / sqrtmagic * math.cos(radlat) * pi)
-                mglat = latitude + dlat
-                mglng = longitude + dlng
-                # '''Please comment out the conversion part
- 
-                print ("longitude,latitude")#longitude,latitude
-                print (""+str(mglng)+","+str(mglat)+"")#经度,纬度
-            else:
-                mglng = -1
-                mglat = -1
-            return (mglng, mglat)
-    return None
+                longitude= rmc.longitude
+                return [latitude, longitude]
+        #time.sleep(2)
+    return [-1, -1]
 
 def setup():
     # global response
@@ -137,12 +120,17 @@ longitude = 0
 while True:
     current_time = time()
     elapsed_time = current_time - start_time
-    new_latitude, new_longitude = serial_data_reader()
-    if new_latitude == -1 and new_longitude == -1 or new_latitude == None and new_longitude == None:
+    gps_data = serial_data_reader()
+    new_latitude = gps_data[0]
+    new_longitude = gps_data[1]
+    if new_latitude == -1 and new_longitude == -1:
         pass
-    if elapsed_time >= ELAPSED_TIME_THRESHOLD:
-        velocity = update_Velocity(Pos)
+    else:
+        latitude = new_latitude
+        longitude = new_longitude
+        if elapsed_time >= ELAPSED_TIME_THRESHOLD:
+            velocity = update_Velocity(Pos)
         # Coordinate system and Direction not implemented yet
-        send_cam_broadcast(ticks = Pos[-1], latitude = latitude, longitude = longitude , vel = velocity, direct = 'forward')
-        Pos = [Pos[-1]]
-        start_time = time()
+            send_cam_broadcast(ticks = Pos[-1], latitude = latitude, longitude = longitude , vel = velocity, direct = 'forward')
+            Pos = [Pos[-1]]
+            start_time = time()
