@@ -43,7 +43,7 @@ Pos = [0]
 start_time = time()
 
 def generate_payload(ticks, latitude, longitude, vel, direct):
-    with open('cam_msg.json') as file:
+    with open('../cam_msg.json') as file:
         template_payload = json.load(file)
         template_payload['position']['ticks'] = ticks
         template_payload['position']['latitude'] = latitude
