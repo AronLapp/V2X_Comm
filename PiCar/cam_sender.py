@@ -1,5 +1,6 @@
 import json
 import socket
+import time
 
 
 def generate_payload(ticks, latitude, longitude, vel, direct):
@@ -53,5 +54,12 @@ def send_cam_broadcast(ticks, latitude, longitude, vel, direct):
 
 
 # this is an example. In the final version, the send_cam should be called by
-# a function that has access to the actual values
-send_cam_broadcast(0, 0, 0 ,0 ,"north")
+# a function that has access to the actual value
+latitude = 47.66772486666667
+longitude = 9.170437583333333
+while True:
+    latitude += 0.001
+    longitude += 0.001
+    send_cam_udp(0, latitude, longitude ,0 ,"north")
+    time.sleep(0.5)
+#send_cam_broadcast(0, 0, 0 ,0 ,"north")

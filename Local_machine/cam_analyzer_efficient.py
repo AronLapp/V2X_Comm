@@ -3,6 +3,9 @@ import socket
 import matplotlib.pyplot as plt
 import time
 import select
+import folium
+import os
+from selenium import webdriver
 
 
 class UDPPositionPlotter:
@@ -51,7 +54,10 @@ class UDPPositionPlotter:
                 self.latitude.append(template_payload['position']['latitude'])
                 self.longitude.append(template_payload['position']['longitude'])
                 self.timestamps.append(t_elapsed)
-
+                print("lat:", self.latitude[-1])
+                print("long:", self.longitude[-1])
+                self.update_map(self.latitude[-1], self.longitude[-1])
+                driver.refresh()
                 #Clear previous plot and redraw
                 ax.clear()
                 ax.plot(self.timestamps, self.ticks, label='ticks')
@@ -64,13 +70,23 @@ class UDPPositionPlotter:
                 # required for updating plot
                 plt.pause(0.001)
 
+    def update_map(self, latitude, longitude):
+        map = folium.Map(location=[latitude, longitude], zoom_start=18)
+        folium.Marker([latitude, longitude], popup = 'car').add_to(map)
+        map.location = (latitude, longitude)   
+        map.save('map.html')
+
     def close(self):
         self.sock.close()
 
 # RNPI2 broadcast Address is 10.255.255.255
 position_plotter = UDPPositionPlotter('0.0.0.0', 5000)
+#position_plotter = UDPPositionPlotter('127.0.0.1', 5000)
 
 try:
+    x = os.path.abspath("map.html")
+    driver = webdriver.Firefox()
+    driver.get("file://" + x)
     position_plotter.receive_data()
 except KeyboardInterrupt:
     pass
