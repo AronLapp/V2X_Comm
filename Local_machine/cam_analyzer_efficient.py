@@ -54,8 +54,8 @@ class UDPPositionPlotter:
                 self.latitude.append(template_payload['position']['latitude'])
                 self.longitude.append(template_payload['position']['longitude'])
                 self.timestamps.append(t_elapsed)
-                print("lat:", self.latitude[-1])
-                print("long:", self.longitude[-1])
+                #print("lat:", self.latitude[-1])
+                #print("long:", self.longitude[-1])
                 self.update_map(self.latitude[-1], self.longitude[-1])
                 driver.refresh()
                 #Clear previous plot and redraw
